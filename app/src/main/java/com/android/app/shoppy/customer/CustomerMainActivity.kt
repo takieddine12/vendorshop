@@ -1,28 +1,26 @@
 package com.android.app.shoppy.customer
 
-import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
-import android.os.StrictMode
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.AutoCompleteTextView
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import com.android.app.shoppy.R
+import com.android.app.shoppy.adapters.ProductsAdapter
 import com.android.app.shoppy.customer.products.PaymentActivity
 import com.android.app.shoppy.databinding.ActivityCustomerMainBinding
-import com.android.app.shoppy.fragments.customer.CustomerFirstFragment
-import com.android.app.shoppy.fragments.customer.CustomerSecondFragment
+import com.android.app.shoppy.listeners.ProductInfoListener
+import com.android.app.shoppy.models.ProductModel
 import com.android.app.shoppy.roomdb.PaymentDatabase
-import com.google.android.material.tabs.TabLayout
+import com.android.app.shoppy.ui.CustomerOrdersActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,7 +29,10 @@ import java.lang.String
 
 
 class CustomerMainActivity : AppCompatActivity() {
-
+    private lateinit var productsAdapter: ProductsAdapter
+    private lateinit var productList : MutableList<ProductModel>
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var databaseReference: DatabaseReference
     private lateinit var notificationImg : ImageView
     private lateinit var badgeTxt : TextView
     private lateinit var menuItem : MenuItem
@@ -47,40 +48,56 @@ class CustomerMainActivity : AppCompatActivity() {
         supportActionBar!!.title = ""
 
 
-        binding.tab.addTab(binding.tab.newTab().setText("Shops"))
-        binding.tab.addTab(binding.tab.newTab().setText("Orders"))
+        init()
+        getAllProducts()
 
-        binding.tab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                when (binding.tab.selectedTabPosition) {
-                    0 -> {
-                        supportFragmentManager.beginTransaction().replace(
-                                R.id.frameLayout, CustomerFirstFragment()).commit()
-                        binding.tab.setTabTextColors(Color.BLACK,Color.WHITE)
-                    }
-                    1 -> {
-                        supportFragmentManager.beginTransaction().replace(
-                                R.id.frameLayout, CustomerSecondFragment()).commit()
-                        binding.tab.setTabTextColors(Color.BLACK,Color.WHITE)
-                    }
-                }
-            }
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-
-            }
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-
-            }
-        })
-
-        if(savedInstanceState == null){
-            supportFragmentManager.beginTransaction().replace(R.id.frameLayout,
-                    CustomerFirstFragment()).commit()
+        binding.orders.setOnClickListener {
+            val intent = Intent(this,CustomerOrdersActivity::class.java)
+            startActivity(intent)
         }
+
 
     }
 
 
+    private fun init(){
+
+        productList = mutableListOf()
+
+        firebaseAuth = FirebaseAuth.getInstance()
+        databaseReference = FirebaseDatabase.getInstance().reference
+
+        binding.recycler.layoutManager = GridLayoutManager(this,2)
+        binding.recycler.setHasFixedSize(true)
+
+    }
+
+    private fun getAllProducts(){
+        databaseReference
+            .child("Sellers")
+            .child("products")
+            .addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if(snapshot.exists()){
+                        for(ds in snapshot.children){
+                            val productModel = ds.getValue(ProductModel::class.java)
+                            productList.add(productModel!!)
+                            productsAdapter = ProductsAdapter(productList,object : ProductInfoListener{
+                                override fun getProductInfo(model: ProductModel) {
+
+                                }
+
+                            })
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+    }
 
     override fun onStart() {
         super.onStart()

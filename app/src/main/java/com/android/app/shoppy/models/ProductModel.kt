@@ -4,19 +4,21 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class ProductModel(
-        val productPrice : String ,
-        val productName : String ,
-        val productDiscount : String ,
-        val productDeliveryFee : String ,
-        val productID : String ,
-        val productSavedTime : String ,
-        val shopStatus : String ,
-        val productImage : String ,
         val productCategory : String ,
-        val productDescription : String
+        val productDeliveryFee : String ,
+        val productDescription : String ,
+        val productDiscount : String ,
+        val productID : String ,
+        val productImage : String ,
+        val productName : String ,
+        val productPrice : String ,
+        val productSavedTime : String ,
+        val sellerUid : String,
+        val shopStatus : String
 
 ) : Parcelable {
         constructor(parcel: Parcel) : this(
+                parcel.readString()!!,
                 parcel.readString()!!,
                 parcel.readString()!!,
                 parcel.readString()!!,
@@ -41,6 +43,7 @@ data class ProductModel(
                 parcel.writeString(productImage)
                 parcel.writeString(productCategory)
                 parcel.writeString(productDescription)
+                parcel.writeString(sellerUid)
         }
 
         override fun describeContents(): Int {
@@ -56,4 +59,5 @@ data class ProductModel(
                         return arrayOfNulls(size)
                 }
         }
+
 }

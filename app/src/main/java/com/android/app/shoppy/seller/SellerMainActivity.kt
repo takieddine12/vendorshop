@@ -1,6 +1,5 @@
 package com.android.app.shoppy.seller
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
@@ -12,10 +11,9 @@ import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.android.app.shoppy.R
-import com.android.app.shoppy.customer.CustomerLoginAcitivity
 import com.android.app.shoppy.databinding.ActivitySellerMainBinding
-import com.android.app.shoppy.fragments.seller.SellerFirstFragment
-import com.android.app.shoppy.fragments.seller.SellerSecondFragment
+import com.android.app.shoppy.ui.seller.SellerFirstFragment
+import com.android.app.shoppy.ui.seller.SellerSecondFragment
 import com.android.app.shoppy.models.OrderModel
 import com.android.app.shoppy.notification.NotificationService
 import com.google.android.material.tabs.TabLayout

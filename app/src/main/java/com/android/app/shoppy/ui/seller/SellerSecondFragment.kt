@@ -1,20 +1,15 @@
-package com.android.app.shoppy.fragments.customer
+package com.android.app.shoppy.ui.seller
 
-import android. app.DatePickerDialog
-import android.media.CamcorderProfile
+import android.app.DatePickerDialog
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
-import android.widget.DatePicker
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.app.shoppy.adapters.CustomerOrdersAdapter
-import com.android.app.shoppy.databinding.CustomerSeconLayoutBinding
+import com.android.app.shoppy.adapters.SellerOrdersAdapter
+import com.android.app.shoppy.databinding.SellerSecondLayoutBinding
 import com.android.app.shoppy.models.OrderDetailsModel
 import com.android.app.shoppy.models.OrderModel
 import com.google.firebase.auth.FirebaseAuth
@@ -23,18 +18,18 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class CustomerSecondFragment : Fragment() {
+class SellerSecondFragment : Fragment() {
 
-    private lateinit var calendar : Calendar
-    private lateinit var ordersAdapter: CustomerOrdersAdapter
+    private lateinit var cal : Calendar
     private lateinit var orderDetailsList : MutableList<OrderDetailsModel>
     private lateinit  var ordersList: MutableList<OrderModel>
+    private lateinit var ordersAdapter: SellerOrdersAdapter
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var databaseReference: DatabaseReference
-    private var _binding : CustomerSeconLayoutBinding? = null
+    private var _binding : SellerSecondLayoutBinding? = null
     private val binding get() = _binding!!
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = CustomerSeconLayoutBinding.inflate(inflater,container,false)
+        _binding = SellerSecondLayoutBinding.inflate(inflater,container,false)
         return binding.root
     }
 
@@ -42,59 +37,82 @@ class CustomerSecondFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         init()
-        getCustomerOrders()
+        getSellerOrders()
         binding.editDate.setOnClickListener {
-             showDatePicker()
-         }
-
+            showDatePicker()
+        }
     }
 
-    var dateListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-            calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth)
-            calendar.set(Calendar.MONTH,month)
-            calendar.set(Calendar.YEAR,year)
-        }
+    private val dateListener  = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+        cal.set(Calendar.DAY_OF_MONTH,dayOfMonth)
+        cal.set(Calendar.MONTH,month)
+        cal.set(Calendar.YEAR,year)
+    }
+
     private fun showDatePicker() {
 
-        val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-        val month = calendar.get(Calendar.MONTH)
-        val year = calendar.get(Calendar.YEAR)
-        DatePickerDialog(requireContext(),dateListener,year,month,dayOfMonth).show()
+        val dayOfMonth = cal.get(Calendar.DAY_OF_MONTH)
+        val month = cal.get(Calendar.MONTH)
+        val year = cal.get(Calendar.YEAR)
 
+        DatePickerDialog(requireContext(),dateListener,dayOfMonth,month,year).show()
 
         // Update edittext and filter data
         val simpleDateFormat = SimpleDateFormat("dd MM yyyy",Locale.getDefault())
-        val formattedDate = simpleDateFormat.format(calendar.time)
+        val formattedDate = simpleDateFormat.format(cal.time)
         binding.editDate.setText(formattedDate)
 
         filterOrders(formattedDate)
     }
 
+
+    //    private fun filterList(query : String){
+//        databaseReference.child("Accounts")
+//            .child("Sellers")
+//            .child(firebaseAuth.currentUser?.uid!!)
+//            .child("payments")
+//            .addValueEventListener(object : ValueEventListener {
+//                override fun onDataChange(snapshot: DataSnapshot) {
+//                    if(snapshot.exists()){
+//                        for(ds in snapshot.children){
+//                            val genericTypeIndicator = object : GenericTypeIndicator<ArrayList<OrderModel>>(){}
+//                            val orderList = ds.child("productsList").getValue(genericTypeIndicator)
+//                            for( i in 0 until orderList!!.size){
+////                                if(orderList!![i].title == query){
+////                                    ordersAdapter = SellerOrdersAdapter(requireContext(),orderList)
+////                                    binding.recycler.adapter = ordersAdapter
+////                                }
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                override fun onCancelled(error: DatabaseError) {
+//
+//                }
+//            })
+//    }
     private fun init(){
 
-        calendar = Calendar.getInstance()
-
+        cal = Calendar.getInstance()
         ordersList = mutableListOf()
         orderDetailsList = mutableListOf()
-
         firebaseAuth = FirebaseAuth.getInstance()
         databaseReference = FirebaseDatabase.getInstance().reference
 
         binding.recycler.layoutManager = LinearLayoutManager(requireContext())
         binding.recycler.setHasFixedSize(true)
     }
-
-    private fun getCustomerOrders(){
+    private fun getSellerOrders(){
 
         databaseReference.child("Accounts")
-                .child("Customers")
+                .child("Sellers")
                 .child(firebaseAuth.currentUser?.uid!!)
                 .child("payments")
-                .addListenerForSingleValueEvent(object : ValueEventListener{
+                .addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         if(snapshot.exists()){
                             for(ds in snapshot.children){
-
 
                                 val orderId = ds.child("OrderId").value.toString()
                                 val orderStatus = ds.child("OrderStatus").value.toString()
@@ -104,7 +122,7 @@ class CustomerSecondFragment : Fragment() {
                                 val country = ds.child("country").value.toString()
                                 val customerUID = ds.child("customerUID").value.toString()
                                 val orderTime = ds.child("orderTime").value.toString()
-                                val totalCost = ds.child("totalCost").value.toString()
+                                var totalCost = ds.child("totalCost").value.toString()
 
                                 val orderModel = OrderModel(
                                     orderId,address,city,country,orderStatus,allQuantity,orderTime,customerUID,totalCost)
@@ -112,9 +130,9 @@ class CustomerSecondFragment : Fragment() {
                                 ordersList.add(orderModel)
 
                                 val genericType = object : GenericTypeIndicator<ArrayList<OrderDetailsModel>>(){}
-                                orderDetailsList = ds.child("productsList").getValue(genericType)?.toMutableList()!!
+                                orderDetailsList = ds.child("productsList").getValue(genericType)!!
 
-                                ordersAdapter = CustomerOrdersAdapter(orderDetailsList,orderList = ordersList)
+                                ordersAdapter = SellerOrdersAdapter(requireContext(),ordersList,orderDetailsList)
                                 binding.recycler.adapter = ordersAdapter
                             }
                         }
@@ -125,34 +143,6 @@ class CustomerSecondFragment : Fragment() {
                     }
                 })
     }
-//    private fun filterList(query : String ){
-//        databaseReference.child("Accounts")
-//            .child("Customers")
-//            .child(firebaseAuth.currentUser?.uid!!)
-//            .child("payments")
-//            .addListenerForSingleValueEvent(object : ValueEventListener{
-//                override fun onDataChange(snapshot: DataSnapshot) {
-//                    if(snapshot.exists()){
-//                       for(ds in snapshot.children){
-//                           val genericTypeIndicator = object : GenericTypeIndicator<ArrayList<OrderModel>>(){}
-//                           var orderList = ds.child("productsList").getValue(genericTypeIndicator)
-//
-//                           for(i in 0 until orderList!!.size){
-//                               if(orderList[i]. == query){
-//                                   ordersAdapter = CustomerOrdersAdapter(ordersList)
-//                                   binding.recycler.adapter = ordersAdapter
-//                               }
-//                           }
-//                       }
-//                    }
-//                }
-//
-//                override fun onCancelled(error: DatabaseError) {
-//
-//                }
-//            })
-//    }
-
     private fun filterOrders(orderDate : String){
         val simpleList = mutableListOf<OrderModel>()
         for(model in ordersList){
@@ -163,9 +153,10 @@ class CustomerSecondFragment : Fragment() {
 
             if(formattedDate.contains(orderDate)){
                 simpleList.add(model)
-                ordersAdapter = CustomerOrdersAdapter(orderDetailsList = orderDetailsList,orderList = simpleList)
+                ordersAdapter = SellerOrdersAdapter(requireContext(),simpleList,orderDetailsList)
                 binding.recycler.adapter = ordersAdapter
             }
         }
     }
+
 }
