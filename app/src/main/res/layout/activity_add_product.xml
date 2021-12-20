@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_color"
+    tools:context=".seller.products.AddProductActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Add Product"
+        android:fontFamily="@font/mont"
+        android:textColor="@color/black"
+        android:background="@color/background_color"
+        android:gravity="center"
+        android:textSize="16sp"/>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp">
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/productImg"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/ic_store"
+            android:layout_gravity="center" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edge_bg_shape">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <EditText
+                            android:id="@+id/productName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/edit_text_design"
+                            android:fontFamily="@font/poppins"
+                            android:hint="@string/product"
+                            android:padding="10dp" />
+
+                        <EditText
+                            android:id="@+id/productPrice"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/edit_text_design"
+                            android:fontFamily="@font/poppins"
+                            android:hint="Price"
+                            android:padding="10dp" />
+
+                        <EditText
+                            android:id="@+id/editCategory"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/edit_text_design"
+                            android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_24"
+                            android:dropDownSelector="@drawable/ic_baseline_arrow_drop_down_circle_24"
+                            android:fontFamily="@font/poppins"
+                            android:padding="10dp"/>
+
+                        <EditText
+                            android:id="@+id/productDiscount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/edit_text_design"
+                            android:fontFamily="@font/poppins"
+                            android:hint="@string/discount"
+                            android:padding="10dp" />
+
+                        <EditText
+                            android:id="@+id/deliveryFee"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/edit_text_design"
+                            android:fontFamily="@font/poppins"
+                            android:hint="@string/delivery_fee"
+                            android:padding="10dp" />
+
+                        <EditText
+                            android:id="@+id/productDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="135dp"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/edit_text_design"
+                            android:fontFamily="@font/poppins"
+                            android:gravity="center"
+                            android:hint="@string/product_description"
+                            android:padding="13dp" />
+
+                        <Button
+                            android:id="@+id/addProduct"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginBottom="20dp"
+                            android:background="@drawable/button_shape_design"
+                            android:fontFamily="@font/mont"
+                            android:text="@string/add_product"
+                            android:textColor="@color/white" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+
+</LinearLayout>
