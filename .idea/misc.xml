@@ -5,10 +5,15 @@
       <map>
         <entry key="..\:/Android/ShoppyApp/app/src/main/res/drawable/ic_dust.xml" value="0.20833333333333334" />
         <entry key="..\:/Android/ShoppyApp/app/src/main/res/drawable/ic_padlock.xml" value="0.20833333333333334" />
+        <entry key="..\:/Android/ShoppyApp/app/src/main/res/layout/activity_check.xml" value="0.2" />
         <entry key="..\:/Android/ShoppyApp/app/src/main/res/layout/activity_customer_main.xml" value="0.18923076923076923" />
         <entry key="..\:/Android/ShoppyApp/app/src/main/res/layout/activity_seller_login.xml" value="0.22" />
+        <entry key="..\:/Android/ShoppyApp/app/src/main/res/layout/activity_seller_main.xml" value="0.18" />
         <entry key="..\:/Android/ShoppyApp/app/src/main/res/layout/activity_seller_password_recovery.xml" value="0.22" />
+        <entry key="..\:/Android/ShoppyApp/app/src/main/res/layout/activity_store_products.xml" value="0.1921875" />
+        <entry key="..\:/Android/ShoppyApp/app/src/main/res/layout/activity_view_products.xml" value="0.1921875" />
         <entry key="..\:/Android/ShoppyApp/app/src/main/res/layout/customer_first_layout.xml" value="0.1921875" />
+        <entry key="..\:/Android/ShoppyApp/app/src/main/res/layout/seller_second_layout.xml" value="0.1921875" />
       </map>
     </option>
   </component>

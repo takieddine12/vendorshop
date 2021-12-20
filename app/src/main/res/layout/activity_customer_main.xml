@@ -45,7 +45,7 @@
                 android:background="@drawable/edit_search_design"
                 android:fontFamily="@font/poppins"
                 android:gravity="center"
-                android:hint="find a shop"
+                android:hint="Im Looking for .."
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:maxLines="1"

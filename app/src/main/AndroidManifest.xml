@@ -20,7 +20,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Shoppy">
-        <activity android:name=".orderPrinting.CustomerInvoicePrintingActivity"></activity>
+        <activity
+            android:name=".ui.ViewProductsActivity"
+            android:exported="false" />
+        <activity android:name=".orderPrinting.CustomerInvoicePrintingActivity" />
         <activity android:name=".orderPrinting.SellerInvoicePrintingActivity" />
         <activity
             android:name=".passwordrecovery.CustomerPasswordRecoveryActivity"
@@ -81,16 +84,16 @@
 
         <service android:name=".notification.NotificationService" />
 
-        <activity android:name=".SplashActivity">
+        <activity android:name=".ui.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"/>
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
 
         <meta-data
             android:name="preloaded_fonts"

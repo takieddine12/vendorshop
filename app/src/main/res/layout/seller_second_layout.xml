@@ -8,7 +8,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:hint="Select A Date"
+        android:hint="Order ID"
         android:gravity="center"
         android:fontFamily="@font/poppins"
         android:background="@drawable/edit_search_design"

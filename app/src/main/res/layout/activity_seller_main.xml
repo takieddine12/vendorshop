@@ -9,7 +9,7 @@
     android:background="@color/background_color"
     tools:context=".seller.SellerMainActivity">
 
-    <LinearLayout
+      <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -29,31 +29,70 @@
                 android:fontFamily="@font/mont"/>
         </androidx.appcompat.widget.Toolbar>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:background="@drawable/edge_bg_shape">
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/edge_bg_shape"
+              android:orientation="vertical">
 
-            <com.google.android.material.tabs.TabLayout
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                app:tabIndicatorColor="@null"
-                app:tabTextColor="@color/black"
-                app:tabBackground="@drawable/selected_tab_background_color"
-                android:layout_marginTop="30dp"
-                android:layout_marginEnd="30dp"
-                android:layout_marginStart="30dp"
-                android:id="@+id/tab"/>
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/frameLayout"
-                android:layout_margin="15dp"/>
+              <androidx.constraintlayout.widget.ConstraintLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="20dp">
 
+                  <EditText
+                      android:id="@+id/editSearch"
+                      android:layout_width="0dp"
+                      android:layout_height="45dp"
+                      android:layout_marginStart="16dp"
+                      android:layout_marginEnd="16dp"
+                      android:background="@drawable/edit_search_design"
+                      android:fontFamily="@font/poppins"
+                      android:gravity="center"
+                      android:hint="Im Looking for .."
+                      android:imeOptions="actionSearch"
+                      android:inputType="text"
+                      android:maxLines="1"
+                      app:layout_constraintBottom_toBottomOf="parent"
+                      app:layout_constraintEnd_toStartOf="@+id/orders"
+                      app:layout_constraintStart_toStartOf="parent"
+                      app:layout_constraintTop_toTopOf="parent" />
+
+
+                  <ImageView
+                      android:id="@+id/orders"
+                      android:layout_width="30dp"
+                      android:layout_height="30dp"
+                      android:layout_marginEnd="16dp"
+                      android:src="@drawable/ic_baseline_monetization_on_24"
+                      app:layout_constraintBottom_toBottomOf="parent"
+                      app:layout_constraintEnd_toEndOf="parent"
+                      app:layout_constraintTop_toTopOf="parent"
+                      app:layout_constraintVertical_bias="0.466" />
+
+              </androidx.constraintlayout.widget.ConstraintLayout>
+
+              <androidx.recyclerview.widget.RecyclerView
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:id="@+id/recycler"
+                  android:layout_marginTop="10dp"
+                  android:scrollbars="vertical" />
+
+          </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:backgroundTint="@color/white"
+        android:layout_margin="10dp"
+        android:elevation="10dp"
+        android:src="@drawable/ic_baseline_add_24"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

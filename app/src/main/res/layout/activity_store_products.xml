@@ -119,6 +119,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/viewAll"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:text="View All"

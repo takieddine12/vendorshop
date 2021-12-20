@@ -33,15 +33,12 @@ class CheckActivity : AppCompatActivity() {
     private var itemID = 0
     private  var totalPrice : Double = 0.0
     private var  itemIndex = 0
-    private var _binding : ActivityCheckBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding : ActivityCheckBinding
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = ActivityCheckBinding.inflate(layoutInflater)
+        binding = ActivityCheckBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
 
         intent?.let {
             val productModel = it.getParcelableExtra<ProductModel>("model")
@@ -85,11 +82,13 @@ class CheckActivity : AppCompatActivity() {
                 }
             }
         }
-
-
-
         init()
         getCustomerName()
+        binding.visitStore.setOnClickListener {
+            val intent = Intent(this,StoreProductsActivity::class.java)
+            intent.putExtra("sellerUid",sellerUid)
+            startActivity(intent)
+        }
     }
     private fun init(){
         progressDialog  = ProgressDialog(this)

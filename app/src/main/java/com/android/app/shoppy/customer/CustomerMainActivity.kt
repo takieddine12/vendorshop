@@ -88,6 +88,7 @@ class CustomerMainActivity : AppCompatActivity() {
                                 }
 
                             })
+                            binding.recycler.adapter = productsAdapter
                         }
                     }
                 }

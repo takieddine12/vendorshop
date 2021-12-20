@@ -4,17 +4,17 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class ProductModel(
-        val productCategory : String ,
-        val productDeliveryFee : String ,
-        val productDescription : String ,
-        val productDiscount : String ,
-        val productID : String ,
-        val productImage : String ,
-        val productName : String ,
-        val productPrice : String ,
-        val productSavedTime : String ,
-        val sellerUid : String,
-        val shopStatus : String
+        val productCategory : String = "" ,
+        val productDeliveryFee : String = "" ,
+        val productDescription : String = "" ,
+        val productDiscount : String = "" ,
+        val productID : String = "" ,
+        val productImage : String = "" ,
+        val productName : String = "" ,
+        val productPrice : String = "" ,
+        val productSavedTime : String = "" ,
+        val sellerUid : String = "" ,
+        val shopStatus :  String = ""
 
 ) : Parcelable {
         constructor(parcel: Parcel) : this(

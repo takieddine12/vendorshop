@@ -1,28 +1,35 @@
 package com.android.app.shoppy.seller
 
 import android.content.Intent
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.android.app.shoppy.R
+import com.android.app.shoppy.adapters.ProductsAdapter
 import com.android.app.shoppy.databinding.ActivitySellerMainBinding
-import com.android.app.shoppy.ui.seller.SellerFirstFragment
-import com.android.app.shoppy.ui.seller.SellerSecondFragment
+import com.android.app.shoppy.listeners.ProductInfoListener
 import com.android.app.shoppy.models.OrderModel
+import com.android.app.shoppy.models.ProductModel
 import com.android.app.shoppy.notification.NotificationService
-import com.google.android.material.tabs.TabLayout
+import com.android.app.shoppy.seller.products.AddProductActivity
+import com.android.app.shoppy.seller.products.ShowProductActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import java.util.*
 import kotlin.collections.ArrayList
 
 class SellerMainActivity : AppCompatActivity() {
+    private lateinit var productsAdapter: ProductsAdapter
+    private lateinit var productsList : MutableList<ProductModel>
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var databaseReference: DatabaseReference
     private var _binding : ActivitySellerMainBinding? = null
@@ -38,41 +45,45 @@ class SellerMainActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
         databaseReference = FirebaseDatabase.getInstance().reference
 
-        binding.tab.addTab(binding.tab.newTab().setText("Products"))
-        binding.tab.addTab(binding.tab.newTab().setText("Orders"))
+        init()
+        getProducts()
 
-        binding.tab.addOnTabSelectedListener(object  : TabLayout.OnTabSelectedListener{
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                when(binding.tab.selectedTabPosition){
-                    0 -> {
-                        supportFragmentManager.beginTransaction().replace(
-                            R.id.frameLayout,SellerFirstFragment()).commit()
-                        binding.tab.setTabTextColors(Color.BLACK, Color.WHITE)
-                    }
-                    1 -> {
-                        supportFragmentManager.beginTransaction().replace(
-                            R.id.frameLayout,SellerSecondFragment()).commit()
-                        binding.tab.setTabTextColors(Color.BLACK,Color.WHITE)
-                    }
-                }
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
+        binding.editSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
 
-            override fun onTabReselected(tab: TabLayout.Tab?) {
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                filterProductsList(s.toString().toLowerCase())
+            }
+
+            override fun afterTextChanged(s: Editable?) {
 
             }
         })
 
-        if(savedInstanceState == null){
-            supportFragmentManager.beginTransaction()
-                    .replace(R.id.frameLayout,SellerFirstFragment()).commit()
+        binding.add.setOnClickListener {
+            Intent(this, AddProductActivity::class.java).apply {
+                startActivity(this)
+
+            }
+        }
+
+        binding.orders.setOnClickListener {
+            //val intent = Intent(this,)
         }
 
         sendSellerNotification()
 
+    }
+
+    private fun init(){
+        productsList = mutableListOf()
+        firebaseAuth = FirebaseAuth.getInstance()
+        databaseReference = FirebaseDatabase.getInstance().reference
+
+        binding.recycler.layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
+        binding.recycler.setHasFixedSize(true)
     }
 
     private fun sendSellerNotification(){
@@ -138,6 +149,65 @@ class SellerMainActivity : AppCompatActivity() {
             .child("Sellers")
             .child(firebaseAuth.currentUser?.uid!!)
             .updateChildren(hashMap)
+    }
+
+    private fun getProducts(){
+        productsList.clear()
+        databaseReference
+            .child("Sellers")
+            .child("products")
+            .orderByChild("sellerUid").equalTo(firebaseAuth.currentUser!!.uid)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (ds in snapshot.children) {
+                        val productModel = ds.getValue(ProductModel::class.java)
+                        productsList.add(productModel!!)
+                        productsAdapter = ProductsAdapter(productsList, object :
+                            ProductInfoListener {
+                            override fun getProductInfo(model: ProductModel) {
+                                Intent(this@SellerMainActivity, ShowProductActivity::class.java).apply {
+                                    putExtra("model", model)
+                                    startActivity(this)
+                                }
+                            }
+                        })
+                        binding.recycler.adapter = productsAdapter
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+            })
+    }
+
+    private fun filterProductsList(query : String){
+        val simpleList = mutableListOf<ProductModel>()
+        for(model in productsList){
+            if(model.productName.toLowerCase().contains(query)){
+                simpleList.add(model)
+
+                productsAdapter = ProductsAdapter(simpleList, object : ProductInfoListener {
+                    override fun getProductInfo(model: ProductModel) {
+                        Intent(this@SellerMainActivity, ShowProductActivity::class.java).apply {
+                            putExtra("model", model)
+                            startActivity(this)
+                        }
+                    }
+                })
+                binding.recycler.adapter = productsAdapter
+            } else {
+                productsAdapter = ProductsAdapter(simpleList, object : ProductInfoListener {
+                    override fun getProductInfo(model: ProductModel) {
+                        Intent(this@SellerMainActivity, ShowProductActivity::class.java).apply {
+                            putExtra("model", model)
+                            startActivity(this)
+                        }
+                    }
+                })
+                binding.recycler.adapter = productsAdapter
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
