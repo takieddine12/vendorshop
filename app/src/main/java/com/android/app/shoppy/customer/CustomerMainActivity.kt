@@ -2,6 +2,8 @@ package com.android.app.shoppy.customer
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -13,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.android.app.shoppy.R
 import com.android.app.shoppy.adapters.ProductsAdapter
+import com.android.app.shoppy.customer.products.CheckActivity
 import com.android.app.shoppy.customer.products.PaymentActivity
 import com.android.app.shoppy.databinding.ActivityCustomerMainBinding
 import com.android.app.shoppy.listeners.ProductInfoListener
@@ -56,9 +59,25 @@ class CustomerMainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.editSearch.addTextChangedListener(watcher)
 
     }
 
+    private var watcher  = object : TextWatcher{
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+        }
+
+        override fun onTextChanged(value : CharSequence?, p1: Int, p2: Int, p3: Int) {
+            if(value.toString().isNotEmpty()){
+                filterProducts(value.toString().toLowerCase())
+            }
+        }
+
+        override fun afterTextChanged(value : Editable?) {
+
+        }
+    }
 
     private fun init(){
 
@@ -84,7 +103,9 @@ class CustomerMainActivity : AppCompatActivity() {
                             productList.add(productModel!!)
                             productsAdapter = ProductsAdapter(productList,object : ProductInfoListener{
                                 override fun getProductInfo(model: ProductModel) {
-
+                                    val intent = Intent(this@CustomerMainActivity,CheckActivity::class.java)
+                                    intent.putExtra("model",model)
+                                    startActivity(intent)
                                 }
 
                             })
@@ -98,6 +119,24 @@ class CustomerMainActivity : AppCompatActivity() {
                 }
 
             })
+    }
+
+    private fun filterProducts(value : kotlin.String){
+        val emptyList = mutableListOf<ProductModel>()
+        for(item in productList){
+            if(item.productName.toLowerCase().contains(value)){
+                emptyList.add(item)
+                productsAdapter = ProductsAdapter(emptyList,object : ProductInfoListener{
+                    override fun getProductInfo(model: ProductModel) {
+                        val intent = Intent(this@CustomerMainActivity,CheckActivity::class.java)
+                        intent.putExtra("model",model)
+                        startActivity(intent)
+                    }
+
+                })
+                binding.recycler.adapter = productsAdapter
+            }
+        }
     }
 
     override fun onStart() {

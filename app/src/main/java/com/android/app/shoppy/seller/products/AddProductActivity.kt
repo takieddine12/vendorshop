@@ -171,13 +171,12 @@ class AddProductActivity : AppCompatActivity() {
                 productDetailsMap["productImage"] = imageDownloadUrl
                 productDetailsMap["productCategory"] = selectedCategory
                 productDetailsMap["productDescription"] = productDescription
+                productDetailsMap["sellerUid"] = firebaseAuth.currentUser!!.uid
 
                 databaseReference.child("Sellers")
-                    .child(firebaseAuth.currentUser?.uid!!)
                     .child("products")
                     .child(productID)
                     .setValue(productDetailsMap).await()
-
 
                 Toast.makeText(this@AddProductActivity,"Product Successfully Added",Toast.LENGTH_SHORT).show()
 

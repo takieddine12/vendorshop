@@ -42,11 +42,11 @@ class CheckActivity : AppCompatActivity() {
 
         intent?.let {
             val productModel = it.getParcelableExtra<ProductModel>("model")
-            country = it.getStringExtra("country")!!
-            city = it.getStringExtra("city")!!
-            state = it.getStringExtra("state")!!
-            address = it.getStringExtra("address")!!
-            sellerUid = it.getStringExtra("sellerUid")!!
+//            country = productModel.getStringExtra("country")!!
+//            city = productModel.getStringExtra("city")!!
+//            state = productModel.getStringExtra("state")!!
+//            address = productModel.getStringExtra("address")!!
+             sellerUid = productModel!!.sellerUid
 
             Picasso.get().load(productModel?.productImage).into(binding.productImage)
             binding.product.text = "Item : " + productModel?.productName

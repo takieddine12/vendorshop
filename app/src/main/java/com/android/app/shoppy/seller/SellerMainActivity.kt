@@ -53,11 +53,13 @@ class SellerMainActivity : AppCompatActivity() {
 
             }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                filterProductsList(s.toString().toLowerCase())
+            override fun onTextChanged(value : CharSequence?, start: Int, before: Int, count: Int) {
+                if(value.toString().isNotEmpty()){
+                    filterProductsList(value.toString().toLowerCase())
+                }
             }
 
-            override fun afterTextChanged(s: Editable?) {
+            override fun afterTextChanged(value : Editable?) {
 
             }
         })
@@ -68,11 +70,9 @@ class SellerMainActivity : AppCompatActivity() {
 
             }
         }
-
         binding.orders.setOnClickListener {
             //val intent = Intent(this,)
         }
-
         sendSellerNotification()
 
     }
@@ -182,12 +182,11 @@ class SellerMainActivity : AppCompatActivity() {
     }
 
     private fun filterProductsList(query : String){
-        val simpleList = mutableListOf<ProductModel>()
+        val emptyList = mutableListOf<ProductModel>()
         for(model in productsList){
             if(model.productName.toLowerCase().contains(query)){
-                simpleList.add(model)
-
-                productsAdapter = ProductsAdapter(simpleList, object : ProductInfoListener {
+                emptyList.add(model)
+                productsAdapter = ProductsAdapter(emptyList, object : ProductInfoListener {
                     override fun getProductInfo(model: ProductModel) {
                         Intent(this@SellerMainActivity, ShowProductActivity::class.java).apply {
                             putExtra("model", model)
@@ -197,7 +196,7 @@ class SellerMainActivity : AppCompatActivity() {
                 })
                 binding.recycler.adapter = productsAdapter
             } else {
-                productsAdapter = ProductsAdapter(simpleList, object : ProductInfoListener {
+                productsAdapter = ProductsAdapter(productsList, object : ProductInfoListener {
                     override fun getProductInfo(model: ProductModel) {
                         Intent(this@SellerMainActivity, ShowProductActivity::class.java).apply {
                             putExtra("model", model)
@@ -237,6 +236,7 @@ class SellerMainActivity : AppCompatActivity() {
                 title.text = "Logging Out!"
                 body.text = "Are you sure you want to quit app!"
                 yesBtn.setOnClickListener {
+                    sellerStatus("Closed")
                     FirebaseAuth.getInstance().signOut()
                     Intent(this, SellerLoginActivity::class.java).apply {
                         startActivity(this)
@@ -256,9 +256,5 @@ class SellerMainActivity : AppCompatActivity() {
         finish()
     }
 
-    override fun onDestroy() {
-        sellerStatus("Closed")
-        super.onDestroy()
 
-    }
 }

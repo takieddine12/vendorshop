@@ -40,7 +40,7 @@ class ShowProductActivity : AppCompatActivity() {
             Picasso.get().load(productModel?.productImage).into(binding.productImg)
 
             val calendar = Calendar.getInstance()
-            calendar.timeInMillis = productModel?.productSavedTime?.toLong()!!
+            calendar.timeInMillis = productModel!!.productSavedTime.toLong()
             val formattedDate = android.text.format.DateFormat.format("dd/MM/yyyy",calendar).toString()
 
             binding.productTime.text = formattedDate

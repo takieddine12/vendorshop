@@ -1,9 +1,11 @@
 package com.android.app.shoppy.ui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.android.app.shoppy.adapters.ProductsAdapter
+import com.android.app.shoppy.customer.products.CheckActivity
 import com.android.app.shoppy.databinding.ActivityViewProductsBinding
 import com.android.app.shoppy.listeners.ProductInfoListener
 import com.android.app.shoppy.models.ProductModel
@@ -51,7 +53,9 @@ class ViewProductsActivity : AppCompatActivity() {
                             productsList.add(productModel!!)
                             productsAdapter = ProductsAdapter(productsList,object : ProductInfoListener {
                                 override fun getProductInfo(model: ProductModel) {
-
+                                    val intent = Intent(this@ViewProductsActivity,CheckActivity::class.java)
+                                    intent.putExtra("model",productModel)
+                                    startActivity(intent)
                                 }
 
                             })

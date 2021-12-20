@@ -33,17 +33,17 @@ data class ProductModel(
         }
 
         override fun writeToParcel(parcel: Parcel, flags: Int) {
-                parcel.writeString(productPrice)
-                parcel.writeString(productName)
-                parcel.writeString(productDiscount)
-                parcel.writeString(productDeliveryFee)
-                parcel.writeString(productID)
-                parcel.writeString(productSavedTime)
-                parcel.writeString(shopStatus)
-                parcel.writeString(productImage)
                 parcel.writeString(productCategory)
+                parcel.writeString(productDeliveryFee)
                 parcel.writeString(productDescription)
+                parcel.writeString(productDiscount)
+                parcel.writeString(productID)
+                parcel.writeString(productImage)
+                parcel.writeString(productName)
+                parcel.writeString(productPrice)
+                parcel.writeString(productSavedTime)
                 parcel.writeString(sellerUid)
+                parcel.writeString(shopStatus)
         }
 
         override fun describeContents(): Int {

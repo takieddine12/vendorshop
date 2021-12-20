@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import com.android.app.shoppy.databinding.ActivitySplashBinding
-import com.android.app.shoppy.extras.SelectionActivity
 
 const val DURATION = 3000L
 class SplashActivity : AppCompatActivity() {
@@ -17,7 +16,7 @@ class SplashActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         Handler().postDelayed({
-            Intent(this,SelectionActivity::class.java).apply {
+            Intent(this, SelectionActivity::class.java).apply {
                 startActivity(this)
                 finish()
             }
